@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing avec Jest - L'Essentiel</title>
+    <link rel="stylesheet" href="testing-jest-styles.css">
+</head>
+<body>
+    <!-- Navigation fixe avec jauge de progression -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="nav-title">🧪 Testing avec Jest</h1>
+            <div class="progress-info">
+                <span class="slide-counter">Slide <span id="current-slide">1</span> / <span id="total-slides">12</span></span>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="main-progress-bar"></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Navigation latérale -->
+    <aside class="sidebar">
+        <div class="sidebar-content">
+            <h3>Sommaire</h3>
+            <nav class="sidebar-nav">
+                <a href="#objectifs" class="sidebar-link active" data-slide="1">
+                    <span class="sidebar-number">1</span>
+                    <span class="sidebar-text">Objectifs</span>
+                </a>
+                <a href="#pourquoi" class="sidebar-link" data-slide="2">
+                    <span class="sidebar-number">2</span>
+                    <span class="sidebar-text">Pourquoi tester</span>
+                </a>
+                <a href="#types" class="sidebar-link" data-slide="3">
+                    <span class="sidebar-number">3</span>
+                    <span class="sidebar-text">Types de tests</span>
+                </a>
+                <a href="#quiz1" class="sidebar-link" data-slide="4">
+                    <span class="sidebar-number">4</span>
+                    <span class="sidebar-text">Quiz 1</span>
+                </a>
+                <a href="#jest" class="sidebar-link" data-slide="5">
+                    <span class="sidebar-number">5</span>
+                    <span class="sidebar-text">Installation Jest</span>
+                </a>
+                <a href="#anatomie" class="sidebar-link" data-slide="6">
+                    <span class="sidebar-number">6</span>
+                    <span class="sidebar-text">Anatomie d'un test</span>
+                </a>
+                <a href="#pratique" class="sidebar-link" data-slide="7">
+                    <span class="sidebar-number">7</span>
+                    <span class="sidebar-text">Fonctions pures</span>
+                </a>
+                <a href="#execution" class="sidebar-link" data-slide="8">
+                    <span class="sidebar-number">8</span>
+                    <span class="sidebar-text">Exécution</span>
+                </a>
+                <a href="#quiz2" class="sidebar-link" data-slide="9">
+                    <span class="sidebar-number">9</span>
+                    <span class="sidebar-text">Quiz 2</span>
+                </a>
+                <a href="#bonnes-pratiques" class="sidebar-link" data-slide="10">
+                    <span class="sidebar-number">10</span>
+                    <span class="sidebar-text">Bonnes pratiques</span>
+                </a>
+                <a href="#synthese" class="sidebar-link" data-slide="11">
+                    <span class="sidebar-number">11</span>
+                    <span class="sidebar-text">Synthèse</span>
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Boutons de navigation slide -->
+    <div class="slide-navigation">
+        <button class="slide-btn slide-prev" id="prev-slide" title="Slide précédent">
+            <span>‹</span>
+        </button>
+        <button class="slide-btn slide-next" id="next-slide" title="Slide suivant">
+            <span>›</span>
+        </button>
+    </div>
+
+    <!-- Contenu principal -->
+    <main class="container main-content">
+        
+        <!-- Section Objectifs -->
+        <section id="objectifs" class="section fade-in">
+            <h2 class="section-title">🎯 Objectifs d'apprentissage</h2>
+            <div class="objectives-grid">
+                <div class="objective-card">
+                    <span class="objective-icon">💡</span>
+                    <h3>Comprendre</h3>
+                    <p>Pourquoi le testing automatisé est indispensable</p>
+                </div>
+                <div class="objective-card">
+                    <span class="objective-icon">🔍</span>
+                    <h3>Identifier</h3>
+                    <p>Les différents types de tests (focus sur les tests unitaires)</p>
+                </div>
+                <div class="objective-card">
+                    <span class="objective-icon">⚙️</span>
+                    <h3>Installer</h3>
+                    <p>Configurer Jest dans un projet Node.js</p>
+                </div>
+                <div class="objective-card">
+                    <span class="objective-icon">✍️</span>
+                    <h3>Écrire</h3>
+                    <p>Des tests unitaires avec describe, it, expect</p>
+                </div>
+                <div class="objective-card">
+                    <span class="objective-icon">🎯</span>
+                    <h3>Tester</h3>
+                    <p>Des fonctions pures avec cas normaux et limites</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chapitre 1 : Pourquoi tester -->
+        <section id="pourquoi" class="section fade-in">
+            <h2 class="section-title">1️⃣ Pourquoi tester son code ?</h2>
+            
+            <div class="content-block">
+                <h3>🚨 Le problème du code non testé</h3>
+                <p>Imaginez une application qui fonctionne parfaitement... jusqu'à ce qu'un développeur modifie une fonction. Soudain, une autre partie de l'application se casse sans qu'on s'en rende compte. Ce type de bug s'appelle une <strong>régression</strong>.</p>
+                
+                <div class="comparison-grid">
+                    <div class="comparison-card bad">
+                        <h4>❌ Sans tests</h4>
+                        <ul>
+                            <li>Bugs découverts par les utilisateurs</li>
+                            <li>Peur de modifier le code</li>
+                            <li>Débogage long et fastidieux</li>
+                            <li>Régression fréquente</li>
+                        </ul>
+                    </div>
+                    <div class="comparison-card good">
+                        <h4>✅ Avec tests</h4>
+                        <ul>
+                            <li>Bugs détectés immédiatement</li>
+                            <li>Confiance pour refactoriser</li>
+                            <li>Débogage rapide et ciblé</li>
+                            <li>Prévention des régressions</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-block">
+                <h3>🏭 L'analogie du contrôle qualité</h3>
+                <div class="analogy-box">
+                    <div class="analogy-item">
+                        <span class="emoji">🏭</span>
+                        <p><strong>Production</strong> = Écrire du code</p>
+                    </div>
+                    <div class="analogy-item">
+                        <span class="emoji">✅</span>
+                        <p><strong>Contrôle qualité</strong> = Tester le code</p>
+                    </div>
+                    <div class="analogy-item">
+                        <span class="emoji">🚨</span>
+                        <p><strong>Défaut détecté</strong> = Test qui échoue</p>
+                    </div>
+                    <div class="analogy-item">
+                        <span class="emoji">🎯</span>
+                        <p><strong>Produit conforme</strong> = Test qui passe</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-info">
+                <strong>💡 À retenir :</strong> Le testing automatisé vous fait gagner du temps et vous évite de livrer des bugs en production. C'est un investissement qui paie rapidement.
+            </div>
+        </section>
+
+        <!-- Chapitre 2 : Types de tests -->
+        <section id="types" class="section fade-in">
+            <h2 class="section-title">2️⃣ Panorama des types de tests</h2>
+            
+            <div class="alert alert-warning">
+                <strong>⚠️ Important :</strong> Ce chapitre est un survol rapide pour la culture générale. Nous allons nous concentrer uniquement sur les <strong>tests unitaires</strong> dans ce cours.
+            </div>
+
+            <div class="content-block">
+                <h3>📊 La pyramide des tests</h3>
+                <div class="pyramid-container">
+                    <div class="pyramid-level level-e2e">
+                        <div class="pyramid-content">
+                            <h4>Tests E2E</h4>
+                            <p>Peu, lents, coûteux</p>
+                            <span class="pyramid-icon">🚗</span>
+                            <p class="pyramid-desc">Simuler un utilisateur réel (clic, navigation)</p>
+                        </div>
+                    </div>
+                    <div class="pyramid-level level-integration">
+                        <div class="pyramid-content">
+                            <h4>Tests d'intégration</h4>
+                            <p>Moyens en nombre et vitesse</p>
+                            <span class="pyramid-icon">🔧</span>
+                            <p class="pyramid-desc">Tester plusieurs modules ensemble</p>
+                        </div>
+                    </div>
+                    <div class="pyramid-level level-unit">
+                        <div class="pyramid-content">
+                            <h4>Tests unitaires</h4>
+                            <p>Beaucoup, rapides, simples</p>
+                            <span class="pyramid-icon">🔩</span>
+                            <p class="pyramid-desc">Tester une fonction isolée</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-block">
+                <h3>🎯 Focus sur les tests unitaires</h3>
+                <div class="focus-box">
+                    <p><strong>Définition :</strong> Un test unitaire vérifie qu'une fonction isolée fonctionne correctement avec différentes entrées.</p>
+                    <p><strong>Caractéristiques :</strong></p>
+                    <ul>
+                        <li>✅ Rapide (millisecondes)</li>
+                        <li>✅ Simple à écrire</li>
+                        <li>✅ Facile à déboguer</li>
+                        <li>✅ Indépendant des autres tests</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="example-box">
+                <h4>💡 Exemple concret</h4>
+                <p><strong>Fonction à tester :</strong></p>
+                <pre><code>function add(a, b) {
+    return a + b;
+}</code></pre>
+                <p><strong>Test unitaire :</strong></p>
+                <pre><code>test('devrait additionner 2 et 3 pour donner 5', () => {
+    expect(add(2, 3)).toBe(5);
+});</code></pre>
+            </div>
+        </section>
+
+        <!-- QUIZ 1 -->
+        <section id="quiz1" class="section fade-in">
+            <h2 class="section-title">🎮 Quiz 1 - Fondamentaux du testing</h2>
+            <div class="quiz-container" data-quiz="1">
+                <div class="quiz-header">
+                    <div class="quiz-progress">
+                        <div class="quiz-progress-bar"></div>
+                    </div>
+                    <p class="quiz-counter">Question <span class="current-question">1</span> sur <span class="total-questions">6</span></p>
+                </div>
+                
+                <div class="quiz-content">
+                    <div class="quiz-question"></div>
+                    <div class="quiz-answers"></div>
+                </div>
+                
+                <div class="quiz-explanation" style="display: none;"></div>
+                
+                <div class="quiz-navigation">
+                    <button class="quiz-btn btn-validate">Valider</button>
+                    <button class="quiz-btn btn-next" style="display: none;">Question suivante</button>
+                </div>
+                
+                <div class="quiz-result" style="display: none;">
+                    <h3>Résultat final</h3>
+                    <p class="result-score"></p>
+                    <button class="quiz-btn btn-restart">Recommencer le quiz</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chapitre 3 : Installation Jest -->
+        <section id="jest" class="section fade-in">
+            <h2 class="section-title">3️⃣ Installation et configuration de Jest</h2>
+            
+            <div class="content-block">
+                <h3>🧰 Qu'est-ce que Jest ?</h3>
+                <p>Jest est un <strong>framework de test JavaScript</strong> créé par Meta (Facebook). C'est la solution la plus populaire pour tester du JavaScript moderne.</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <span class="feature-icon">⚡</span>
+                        <h4>Zero-config</h4>
+                        <p>Fonctionne sans configuration complexe</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">🚀</span>
+                        <h4>Rapide</h4>
+                        <p>Exécution parallèle des tests</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">📸</span>
+                        <h4>Complet</h4>
+                        <p>Assertions, mocks, snapshots intégrés</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-block">
+                <h3>📦 Installation en 3 étapes</h3>
+                
+                <div class="steps-container">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Initialiser le projet Node.js</h4>
+                            <pre><code>npm init -y</code></pre>
+                            <p class="step-desc">Crée le fichier package.json</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Installer Jest en dépendance de développement</h4>
+                            <pre><code>npm install --save-dev jest</code></pre>
+                            <p class="step-desc">Le flag <code>--save-dev</code> indique que Jest est uniquement pour le développement</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Configurer le script de test</h4>
+                            <p>Dans <code>package.json</code>, modifier la section <code>scripts</code> :</p>
+                            <pre><code>"scripts": {
+    "test": "jest"
+}</code></pre>
+                            <p class="step-desc">Permet de lancer les tests avec <code>npm test</code></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-block">
+                <h3>📁 Convention de nommage</h3>
+                <div class="alert alert-info">
+                    <strong>💡 Règle importante :</strong> Les fichiers de test doivent se nommer <code>*.test.js</code> ou <code>*.spec.js</code>
+                    <br><br>
+                    <strong>Exemple :</strong> Pour tester <code>sum.js</code>, créer <code>sum.test.js</code>
+                </div>
+            </div>
+
+            <div class="example-box">
+                <h4>📂 Structure de projet type</h4>
+                <pre><code>mon-projet/
+├── package.json
+├── sum.js            ← Fonction à tester
+└── sum.test.js       ← Tests de la fonction</code></pre>
+            </div>
+        </section>
+
+        <!-- Chapitre 4 : Anatomie d'un test -->
+        <section id="anatomie" class="section fade-in">
+            <h2 class="section-title">4️⃣ Anatomie d'un test unitaire</h2>
+            
+            <div class="content-block">
+                <h3>🔍 Structure de base</h3>
+                <p>Un test Jest utilise une syntaxe simple et lisible :</p>
+                
+                <div class="code-explanation">
+                    <pre><code>describe('Groupe de tests', () => {
+    it('devrait faire quelque chose', () => {
+        // Arrange : Préparer
+        const a = 2;
+        const b = 3;
+        
+        // Act : Agir
+        const result = add(a, b);
+        
+        // Assert : Vérifier
+        expect(result).toBe(5);
+    });
+});</code></pre>
+                </div>
+            </div>
+
+            <div class="content-block">
+                <h3>🧩 Les éléments clés</h3>
+                
+                <div class="elements-grid">
+                    <div class="element-card">
+                        <h4><code>describe()</code></h4>
+                        <p>Groupe plusieurs tests liés ensemble</p>
+                        <div class="element-example">
+                            <code>describe('Fonction add', () => {...})</code>
+                        </div>
+                    </div>
+
+                    <div class="element-card">
+                        <h4><code>it()</code> ou <code>test()</code></h4>
+                        <p>Définit un test individuel (synonymes)</p>
+                        <div class="element-example">
+                            <code>it('devrait retourner 5', () => {...})</code>
+                        </div>
+                    </div>
+
+                    <div class="element-card">
+                        <h4><code>expect()</code></h4>
+                        <p>Déclare ce qu'on attend comme résultat</p>
+                        <div class="element-example">
+                            <code>expect(result)</code>
+                        </div>
+                    </div>
+
+                    <div class="element-card">
+                        <h4>Matchers</h4>
+                        <p>Méthodes de comparaison</p>
+                        <div class="element-example">
+                            <code>.toBe()</code>, <code>.toEqual()</code>, <code>.toBeTruthy()</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-block">
+                <h3>🍳 Le pattern AAA (Arrange, Act, Assert)</h3>
+                <div class="aaa-container">
+                    <div class="aaa-step">
+                        <span class="aaa-icon">📋</span>
+                        <h4>Arrange</h4>
+                        <p>Préparer les données et l'environnement</p>
+                        <code>const a = 2, b = 3;</code>
+                    </div>
+                    <div class="aaa-arrow">→</div>
+                    <div class="aaa-step">
+                        <span class="aaa-icon">👨‍🍳</span>
+                        <h4>Act</h4>
+                        <p>Exécuter la fonction à tester</p>
+                        <code>const result = add(a, b);</code>
+                    </div>
+                    <div class="aaa-arrow">→</div>
+                    <div class="aaa-step">
+                        <span class="aaa-icon">👅</span>
+                        <h4>Assert</h4>
+                        <p>Vérifier que le résultat est correct</p>
+                        <code>expect(result).toBe(5);</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-block">
+                <h3>⚖️ <code>toBe()</code> vs <code>toEqual()</code></h3>
+                
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h4><code>.toBe()</code></h4>
+                        <p><strong>Égalité stricte (===)</strong></p>
+                        <p>Pour valeurs primitives</p>
+                        <div class="element-example">
+                            <code>expect(5).toBe(5);</code><br>
+                            <code>expect('hello').toBe('hello');</code><br>
+                            <code>expect(true).toBe(true);</code>
+                        </div>
+                    </div>
+
+                    <div class="comparison-card">
+                        <h4><code>.toEqual()</code></h4>
+                        <p><strong>Égalité profonde</strong></p>
+                        <p>Pour objets et tableaux</p>
+                        <div class="element-example">
+                            <code>expect([1, 2]).toEqual([1, 2]);</code><br>
+                            <code>expect({a: 1}).toEqual({a: 1});</code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>⚠️ Erreur fréquente :</strong> Utiliser <code>toBe()</code> pour comparer des objets ou tableaux ne fonctionnera pas !
+                    <br><br>
+                    <code>expect([1, 2]).toBe([1, 2]); // ❌ FAIL</code><br>
+                    <code>expect([1, 2]).toEqual([1, 2]); // ✅ PASS</code>
+                </div>
+            </div>
+
+            <div class="example-box">
+                <h4>💡 Exemple complet</h4>
+                <pre><code>// sum.js
+function sum(a, b) {
+    return a + b;
+}
+module.exports = sum;
+
+// sum.test.js
+const sum = require('./sum');
+
+describe('Fonction sum', () => {
+    it('devrait additionner deux nombres positifs', () => {
+        expect(sum(2, 3)).toBe(5);
+    });
+    
+    it('devrait gérer le zéro', () => {
+        expect(sum(5, 0)).toBe(5);
+    });
+    
+    it('devrait additionner des nombres négatifs', () => {
+        expect(sum(-2, -3)).toBe(-5);
+    });
+});</code></pre>
+            </div>
+        </section>
+
+        <!-- Chapitre 5 : Pratique -->
+        <section id="pratique" class="section fade-in">
+            <h2 class="section-title">5️⃣ Tester des fonctions pures</h2>
+            
+            <div class="content-block">
+                <h3>🔬 Qu'est-ce qu'une fonction pure ?</h3>
+                <div class="definition-box">
+                    <p><strong>Définition :</strong> Une fonction pure est une fonction qui :</p>
+                    <ul>
+                        <li>✅ Retourne toujours le même résultat pour les mêmes paramètres</li>
+                        <li>✅ N'a pas d'effet de bord (ne modifie rien en dehors d'elle-même)</li>
+                    </ul>
+                </div>
+
+                <div class="comparison-grid">
+                    <div class="comparison-card good">
+                        <h4>✅ Fonction pure</h4>
+                        <pre><code>function add(a, b) {
+    return a + b;
+}
+// Toujours 5 pour add(2, 3)</code></pre>
+                    </div>
+                    <div class="comparison-card bad">
+                        <h4>❌ Fonction impure</h4>
+                        <pre><code>let total = 0;
+function addToTotal(n) {
+    total += n; // Effet de bord!
+    return total;
+}
+// Résultat différent à chaque appel</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-block">
+                <h3>🎯 Tester le "Happy Path" et les cas limites</h3>
+                
+                <div class="testing-strategy">
+                    <div class="strategy-item">
+                        <span class="strategy-icon">🎯</span>
+                        <h4>Happy Path</h4>
+                        <p>Le cas d'usage normal et attendu</p>
+                        <code>add(2, 3) → 5</code>
+                    </div>
+                    <div class="strategy-item">
+                        <span class="strategy-icon">🚨</span>
+                        <h4>Cas limites</h4>
+                        <p>Valeurs inhabituelles ou extrêmes</p>
+                        <code>add(0, 5) → 5</code>
+                        <code>add(-2, -3) → -5</code>
+                    </div>
+                    <div class="strategy-item">
+                        <span class="strategy-icon">❌</span>
+                        <h4>Cas d'erreur</h4>
+                        <p>Valeurs qui devraient échouer</p>
+                        <code>add(null, 5) → ?</code>
+                        <code>add('a', 5) → ?</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-block">
+                <h3>📝 Exemples de fonctions à tester</h3>
+                
+                <div class="examples-container">
+                    <div class="example-item">
+                        <h4>1️⃣ Fonction mathématique simple</h4>
+                        <pre><code>function multiply(a, b) {
+    return a * b;
+}
+
+// Tests
+describe('Fonction multiply', () => {
+    it('devrait multiplier deux nombres positifs', () => {
+        expect(multiply(3, 4)).toBe(12);
+    });
+    
+    it('devrait gérer la multiplication par zéro', () => {
+        expect(multiply(5, 0)).toBe(0);
+    });
+    
+    it('devrait gérer les nombres négatifs', () => {
+        expect(multiply(-3, 4)).toBe(-12);
+    });
+});</code></pre>
+                    </div>
+
+                    <div class="example-item">
+                        <h4>2️⃣ Transformation de chaîne</h4>
+                        <pre><code>function capitalize(str) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+// Tests
+describe('Fonction capitalize', () => {
+    it('devrait mettre la première lettre en majuscule', () => {
+        expect(capitalize('hello')).toBe('Hello');
+    });
+    
+    it('devrait gérer une chaîne vide', () => {
+        expect(capitalize('')).toBe('');
+    });
+    
+    it('devrait gérer null/undefined', () => {
+        expect(capitalize(null)).toBe('');
+        expect(capitalize(undefined)).toBe('');
+    });
+});</code></pre>
+                    </div>
+
+                    <div class="example-item">
+                        <h4>3️⃣ Filtrage de tableau</h4>
+                        <pre><code>function filterAdults(users) {
+    return users.filter(user => user.age >= 18);
+}
+
+// Tests
+describe('Fonction filterAdults', () => {
+    it('devrait filtrer les utilisateurs majeurs', () => {
+        const users = [
+            {name: 'Alice', age: 25},
+            {name: 'Bob', age: 16},
+            {name: 'Charlie', age: 18}
+        ];
+        const result = filterAdults(users);
+        expect(result).toEqual([
+            {name: 'Alice', age: 25},
+            {name: 'Charlie', age: 18}
+        ]);
+    });
+    
+    it('devrait retourner un tableau vide si aucun majeur', () => {
+        const users = [{name: 'Bob', age: 16}];
+        expect(filterAdults(users)).toEqual([]);
+    });
+    
+    it('devrait gérer un tableau vide', () => {
+        expect(filterAdults([])).toEqual([]);
+    });
+});</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ Erreurs fréquentes :</strong>
+                <ul>
+                    <li>Ne tester que le "happy path" et ignorer les cas limites</li>
+                    <li>Ne pas tester avec <code>null</code>, <code>undefined</code>, <code>0</code>, <code>""</code> (chaîne vide)</li>
+                    <li>Tester plusieurs choses dans un seul <code>it()</code></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Chapitre 6 : Exécution -->
+        <section id="execution" class="section fade-in">
+            <h2 class="section-title">6️⃣ Exécuter et interpréter les tests</h2>
+            
+            <div class="content-block">
+                <h3>🚀 Commandes Jest essentielles</h3>
+                
+                <div class="commands-grid">
+                    <div class="command-card">
+                        <h4><code>npm test</code></h4>
+                        <p>Exécute tous les tests une fois</p>
+                        <span class="command-badge">Commande de base</span>
+                    </div>
+
+                    <div class="command-card">
+                        <h4><code>npm test -- --watch</code></h4>
+                        <p>Mode surveillance : re-exécute les tests à chaque modification</p>
+                        <span class="command-badge">Recommandé en développement</span>
+                    </div>
+
+                    <div class="command-card">
+                        <h4><code>npm test -- --coverage</code></h4>
+                        <p>Génère un rapport de couverture de code</p>
+                        <span class="command-badge">Pour l'analyse</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-block">
+                <h3>📊 Interpréter les résultats</h3>
+                
+                <div class="results-example">
+                    <h4>✅ Tests réussis (PASS)</h4>
+                    <pre class="result-pass"><code>PASS  ./sum.test.js
+  Fonction sum
+    ✓ devrait additionner deux nombres positifs (3ms)
+    ✓ devrait gérer le zéro (1ms)
+    ✓ devrait additionner des nombres négatifs (1ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       3 passed, 3 total
+Time:        1.234s</code></pre>
+                </div>
+
+                <div class="results-example">
+                    <h4>❌ Test échoué (FAIL)</h4>
+                    <pre class="result-fail"><code>FAIL  ./sum.test.js
+  Fonction sum
+    ✓ devrait additionner deux nombres positifs (3ms)
+    ✕ devrait gérer le zéro (5ms)
+    ✓ devrait additionner des nombres négatifs (1ms)
+
+  ● Fonction sum › devrait gérer le zéro
+
+    expect(received).toBe(expected)
+
+    Expected: 5
+    Received: 0
+
+      10 |     it('devrait gérer le zéro', () => {
+      11 |         const result = sum(5, 0);
+    > 12 |         expect(result).toBe(5);
+         |                        ^
+      13 |     });
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 2 passed, 3 total</code></pre>
+                </div>
+            </div>
+
+            <div class="content-block">
+                <h3>🔄 Workflow de développement avec tests</h3>
+                
+                <div class="workflow-steps">
+                    <div class="workflow-step">
+                        <span class="workflow-number">1</span>
+                        <div class="workflow-content">
+                            <h4>Écrire la fonction</h4>
+                            <p>Créer la fonction à tester</p>
+                        </div>
+                    </div>
+                    <div class="workflow-arrow">↓</div>
+                    <div class="workflow-step">
+                        <span class="workflow-number">2</span>
+                        <div class="workflow-content">
+                            <h4>Écrire les tests</h4>
+                            <p>Créer le fichier <code>*.test.js</code></p>
+                        </div>
+                    </div>
+                    <div class="workflow-arrow">↓</div>
+                    <div class="workflow-step">
+                        <span class="workflow-number">3</span>
+                        <div class="workflow-content">
+                            <h4>Lancer les tests</h4>
+                            <p><code>npm test -- --watch</code></p>
+                        </div>
+                    </div>
+                    <div class="workflow-arrow">↓</div>
+                    <div class="workflow-step fail">
+                        <span class="workflow-number">4</span>
+                        <div class="workflow-content">
+                            <h4>❌ Tests rouges (FAIL)</h4>
+                            <p>Normal si fonction vide ou bugs</p>
+                        </div>
+                    </div>
+                    <div class="workflow-arrow">↓</div>
+                    <div class="workflow-step">
+                        <span class="workflow-number">5</span>
+                        <div class="workflow-content">
+                            <h4>Corriger le code</h4>
+                            <p>Modifier jusqu'à ce que les tests passent</p>
+                        </div>
+                    </div>
+                    <div class="workflow-arrow">↓</div>
+                    <div class="workflow-step success">
+                        <span class="workflow-number">6</span>
+                        <div class="workflow-content">
+                            <h4>✅ Tests verts (PASS)</h4>
+                            <p>Code fonctionnel et testé !</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-info">
+                <strong>💡 Astuce :</strong> Utilisez le mode <code>--watch</code> pendant le développement. Jest relancera automatiquement les tests à chaque sauvegarde de fichier.
+            </div>
+        </section>
+
+        <!-- QUIZ 2 -->
+        <section id="quiz2" class="section fade-in">
+            <h2 class="section-title">🎮 Quiz 2 - Pratique avec Jest</h2>
+            <div class="quiz-container" data-quiz="2">
+                <div class="quiz-header">
+                    <div class="quiz-progress">
+                        <div class="quiz-progress-bar"></div>
+                    </div>
+                    <p class="quiz-counter">Question <span class="current-question">1</span> sur <span class="total-questions">6</span></p>
+                </div>
+                
+                <div class="quiz-content">
+                    <div class="quiz-question"></div>
+                    <div class="quiz-answers"></div>
+                </div>
+                
+                <div class="quiz-explanation" style="display: none;"></div>
+                
+                <div class="quiz-navigation">
+                    <button class="quiz-btn btn-validate">Valider</button>
+                    <button class="quiz-btn btn-next" style="display: none;">Question suivante</button>
+                </div>
+                
+                <div class="quiz-result" style="display: none;">
+                    <h3>Résultat final</h3>
+                    <p class="result-score"></p>
+                    <button class="quiz-btn btn-restart">Recommencer le quiz</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chapitre 7 : Bonnes pratiques -->
+        <section id="bonnes-pratiques" class="section fade-in">
+            <h2 class="section-title">7️⃣ Bonnes pratiques</h2>
+            
+            <div class="content-block">
+                <h3>✅ Les règles d'or du bon test</h3>
+                
+                <div class="best-practices-grid">
+                    <div class="practice-card">
+                        <span class="practice-icon">1️⃣</span>
+                        <h4>Un test = une vérification</h4>
+                        <p>Chaque <code>it()</code> ne teste qu'une seule chose</p>
+                        <div class="practice-example good">
+                            <code>✅ it('devrait retourner 5', ...)</code>
+                        </div>
+                        <div class="practice-example bad">
+                            <code>❌ it('devrait tout faire', ...)</code>
+                        </div>
+                    </div>
+
+                    <div class="practice-card">
+                        <span class="practice-icon">🔬</span>
+                        <h4>Tests isolés</h4>
+                        <p>Les tests ne doivent pas dépendre les uns des autres</p>
+                        <div class="practice-example good">
+                            <code>✅ Chaque test prépare ses données</code>
+                        </div>
+                        <div class="practice-example bad">
+                            <code>❌ Test 2 utilise les résultats du Test 1</code>
+                        </div>
+                    </div>
+
+                    <div class="practice-card">
+                        <span class="practice-icon">📝</span>
+                        <h4>Noms descriptifs</h4>
+                        <p>Le nom du test doit expliquer ce qui est testé</p>
+                        <div class="practice-example good">
+                            <code>✅ 'devrait retourner 5 pour add(2, 3)'</code>
+                        </div>
+                        <div class="practice-example bad">
+                            <code>❌ 'test 1', 'fonctionne'</code>
+                        </div>
+                    </div>
+
+                    <div class="practice-card">
+                        <span class="practice-icon">⚡</span>
+                        <h4>Tests rapides</h4>
+                        <p>Les tests unitaires doivent s'exécuter en millisecondes</p>
+                        <div class="practice-example good">
+                            <code>✅ Fonctions pures sans dépendances</code>
+                        </div>
+                        <div class="practice-example bad">
+                            <code>❌ Appels API, lectures de fichiers</code>
+                        </div>
+                    </div>
+
+                    <div class="practice-card">
+                        <span class="practice-icon">🎯</span>
+                        <h4>Tester le comportement</h4>
+                        <p>Pas l'implémentation interne</p>
+                        <div class="practice-example good">
+                            <code>✅ expect(result).toBe(5)</code>
+                        </div>
+                        <div class="practice-example bad">
+                            <code>❌ Vérifier les variables internes privées</code>
+                        </div>
+                    </div>
+
+                    <div class="practice-card">
+                        <span class="practice-icon">🔄</span>
+                        <h4>Tests déterministes</h4>
+                        <p>Toujours le même résultat pour les mêmes données</p>
+                        <div class="practice-example good">
+                            <code>✅ Données fixes dans le test</code>
+                        </div>
+                        <div class="practice-example bad">
+                            <code>❌ Utiliser Date.now(), Math.random()</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-block">
+                <h3>🎯 Checklist du test parfait</h3>
+                
+                <div class="checklist-box">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check1" disabled>
+                        <label for="check1">Le test est <strong>isolé</strong> (pas de dépendances avec d'autres tests)</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check2" disabled>
+                        <label for="check2">Le nom est <strong>descriptif</strong> et explique ce qui est testé</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check3" disabled>
+                        <label for="check3">Une seule chose est testée par <code>it()</code></label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check4" disabled>
+                        <label for="check4">Le test est <strong>rapide</strong> (< 50ms pour un test unitaire)</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check5" disabled>
+                        <label for="check5">Le test est <strong>déterministe</strong> (toujours le même résultat)</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check6" disabled>
+                        <label for="check6">Les cas limites sont testés (null, 0, [], "", etc.)</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ Pièges à éviter :</strong>
+                <ul>
+                    <li>Tests qui dépendent de l'ordre d'exécution</li>
+                    <li>Tester l'implémentation au lieu du résultat</li>
+                    <li>Sur-tester des détails insignifiants (getters/setters simples)</li>
+                    <li>Ignorer les tests qui échouent ("je corrigerai plus tard")</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section Synthèse -->
+        <section id="synthese" class="section fade-in">
+            <h2 class="section-title">📌 Synthèse</h2>
+            
+            <div class="content-block">
+                <h3>🔑 Points clés à retenir</h3>
+                
+                <div class="key-points-grid">
+                    <div class="key-point-card">
+                        <span class="key-icon">💡</span>
+                        <h4>Concepts fondamentaux</h4>
+                        <ul>
+                            <li>Le testing automatisé détecte les bugs avant la production</li>
+                            <li>Les tests unitaires testent une fonction isolée</li>
+                            <li>La pyramide : beaucoup de tests unitaires, moins d'intégration, peu d'E2E</li>
+                            <li>Jest est le framework JavaScript de référence</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-point-card">
+                        <span class="key-icon">💻</span>
+                        <h4>Syntaxe essentielle</h4>
+                        <ul>
+                            <li><code>describe('Groupe', () => {})</code> : groupe de tests</li>
+                            <li><code>it('devrait...', () => {})</code> : un test</li>
+                            <li><code>expect(result).toBe(5)</code> : égalité stricte</li>
+                            <li><code>expect(obj).toEqual({a: 1})</code> : égalité profonde</li>
+                            <li><code>npm test</code> : exécuter les tests</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-point-card">
+                        <span class="key-icon">🔄</span>
+                        <h4>Workflow de base</h4>
+                        <ul>
+                            <li>1. Écrire une fonction pure</li>
+                            <li>2. Créer un fichier <code>*.test.js</code></li>
+                            <li>3. Écrire des tests avec <code>describe</code> et <code>it</code></li>
+                            <li>4. Tester happy path + cas limites</li>
+                            <li>5. Exécuter avec <code>npm test</code></li>
+                            <li>6. Corriger si rouge, continuer si vert</li>
+                        </ul>
+                    </div>
+
+                    <div class="key-point-card">
+                        <span class="key-icon">✅</span>
+                        <h4>Règles d'or</h4>
+                        <ul>
+                            <li>Tester les cas normaux ET les cas limites</li>
+                            <li>Un test = une vérification</li>
+                            <li>Tests isolés et indépendants</li>
+                            <li>Noms descriptifs et explicites</li>
+                            <li>Utiliser le mode watch en développement</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-block">
+                <h3>📚 Ressources pour aller plus loin</h3>
+                
+                <div class="resources-grid">
+                    <div class="resource-card">
+                        <h4>📖 Documentation officielle</h4>
+                        <ul>
+                            <li><a href="https://jestjs.io/docs/getting-started" target="_blank">Jest - Getting Started</a></li>
+                            <li><a href="https://jestjs.io/docs/using-matchers" target="_blank">Jest - Using Matchers</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card">
+                        <h4>🎥 Tutoriels vidéo</h4>
+                        <ul>
+                            <li><a href="https://grafikart.fr/tutoriels/jest" target="_blank">Grafikart - Jest (français)</a></li>
+                            <li><a href="https://www.youtube.com/watch?v=7r4xVDI2vho" target="_blank">Traversy Media - Jest Crash Course</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card">
+                        <h4>💪 Pratique</h4>
+                        <ul>
+                            <li><a href="https://exercism.org/tracks/javascript" target="_blank">Exercism - JavaScript Track</a></li>
+                            <li><a href="https://www.codewars.com/" target="_blank">Codewars - Katas avec tests</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card">
+                        <h4>🚀 Pour approfondir</h4>
+                        <ul>
+                            <li>Mocking avec Jest (simuler des dépendances)</li>
+                            <li>Tests asynchrones (Promises, async/await)</li>
+                            <li>TDD (Test-Driven Development)</li>
+                            <li>Snapshot testing</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="final-message">
+                <h3>🎉 Félicitations !</h3>
+                <p>Vous maîtrisez maintenant les bases du testing avec Jest. Continuez à pratiquer en testant vos propres fonctions, et n'oubliez pas : <strong>un bon développeur écrit des tests !</strong></p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>BTS SIO SLAM - Testing avec Jest | Version 1.0</p>
+    </footer>
+
+    <script src="testing-jest-script.js"></script>
+</body>
+</html>
