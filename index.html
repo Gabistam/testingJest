@@ -170,6 +170,67 @@
                 </div>
             </div>
 
+            <div class="content-block">
+                <h3>🔄 Les méthodologies de testing</h3>
+                <p>Il existe plusieurs approches pour intégrer les tests dans le développement :</p>
+
+                <div class="methodology-grid">
+                    <div class="methodology-card">
+                        <h4>🔴 TDD (Test-Driven Development)</h4>
+                        <p class="methodology-subtitle">Développement piloté par les tests</p>
+                        <div class="methodology-steps">
+                            <span class="step-badge red">1. Red</span>
+                            <span class="step-badge green">2. Green</span>
+                            <span class="step-badge blue">3. Refactor</span>
+                        </div>
+                        <p><strong>Principe :</strong> Écrire le test AVANT le code</p>
+                        <ul>
+                            <li>Écrire un test qui échoue (Red)</li>
+                            <li>Écrire le code minimal pour le faire passer (Green)</li>
+                            <li>Améliorer le code (Refactor)</li>
+                        </ul>
+                    </div>
+
+                    <div class="methodology-card">
+                        <h4>🗣️ BDD (Behavior-Driven Development)</h4>
+                        <p class="methodology-subtitle">Développement piloté par le comportement</p>
+                        <p><strong>Principe :</strong> Décrire le comportement attendu AVANT le code, en langage naturel</p>
+                        <ul>
+                            <li>Les comportements sont définis en amont avec les parties prenantes</li>
+                            <li>Utilise un langage proche du métier (Given/When/Then)</li>
+                            <li>Favorise la collaboration équipe/client/métier</li>
+                            <li>Tests lisibles par tous (non-techniques)</li>
+                            <li>Le code est ensuite écrit pour satisfaire ces comportements</li>
+                            <li>Frameworks : Cucumber, Jasmine, Jest (avec extensions)</li>
+                        </ul>
+                        <div class="bdd-example">
+                            <strong>Exemple de scénario BDD :</strong><br>
+                            <code>Given un utilisateur connecté<br>When il clique sur "Déconnexion"<br>Then il est redirigé vers la page d'accueil</code>
+                        </div>
+                    </div>
+
+                    <div class="methodology-card">
+                        <h4>📝 Tests a posteriori</h4>
+                        <p class="methodology-subtitle">Approche classique : coder puis tester</p>
+                        <p><strong>Principe :</strong> Écrire le code PUIS les tests</p>
+                        <ul>
+                            <li>Approche la plus courante et intuitive</li>
+                            <li>On développe la fonctionnalité d'abord</li>
+                            <li>On écrit ensuite les tests pour valider</li>
+                            <li>Plus facile pour débuter, mais moins rigoureux que le TDD</li>
+                            <li>Risque d'oublier certains cas limites</li>
+                        </ul>
+                        <div class="alert alert-warning" style="margin-top: 1rem; padding: 0.75rem; font-size: 0.85rem;">
+                            <strong>⚠️ Attention :</strong> Cette approche est plus simple mais peut conduire à des tests incomplets ou biaisés par l'implémentation.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>💡 Note :</strong> Dans ce cours, nous utiliserons l'approche <strong>Tests a posteriori</strong> (écrire le code puis les tests) car elle est plus simple pour débuter. Cependant, le <strong>TDD</strong> est une pratique fortement recommandée en entreprise pour garantir une meilleure qualité de code et une couverture de tests plus complète.
+                </div>
+            </div>
+
             <div class="alert alert-info">
                 <strong>💡 À retenir :</strong> Le testing automatisé vous fait gagner du temps et vous évite de livrer des bugs en production. C'est un investissement qui paie rapidement.
             </div>
@@ -224,6 +285,115 @@
                         <li>✅ Facile à déboguer</li>
                         <li>✅ Indépendant des autres tests</li>
                     </ul>
+                </div>
+            </div>
+
+            <div class="content-block">
+                <h3>📊 Tableau récapitulatif des types de tests</h3>
+                <p>Voici un panorama complet des différents types de tests que vous pourriez rencontrer en développement :</p>
+
+                <div class="table-container">
+                    <table class="tests-table">
+                        <thead>
+                            <tr>
+                                <th>Type de test</th>
+                                <th>Objectif</th>
+                                <th>Portée</th>
+                                <th>Vitesse</th>
+                                <th>Outils</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="highlight-row">
+                                <td><strong>Tests unitaires</strong></td>
+                                <td>Tester une fonction isolée</td>
+                                <td>Très limitée (1 fonction)</td>
+                                <td>⚡ Très rapide (ms)</td>
+                                <td>Jest, Mocha, Jasmine</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tests d'intégration</strong></td>
+                                <td>Vérifier que plusieurs modules fonctionnent ensemble</td>
+                                <td>Moyenne (plusieurs modules)</td>
+                                <td>🚶 Moyen (secondes)</td>
+                                <td>Jest, Supertest, Postman</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tests E2E (End-to-End)</strong></td>
+                                <td>Simuler un parcours utilisateur complet</td>
+                                <td>Large (application complète)</td>
+                                <td>🐌 Lent (minutes)</td>
+                                <td>Cypress, Selenium, Playwright</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tests de régression</strong></td>
+                                <td>S'assurer qu'une modification n'a pas cassé l'existant</td>
+                                <td>Variable (selon le changement)</td>
+                                <td>Variable</td>
+                                <td>Tous frameworks de test</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tests de performance</strong></td>
+                                <td>Mesurer les temps de réponse et la charge supportée</td>
+                                <td>Application complète</td>
+                                <td>🐌 Lent (minutes à heures)</td>
+                                <td>JMeter, K6, Artillery, Lighthouse</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tests de charge</strong></td>
+                                <td>Vérifier le comportement sous forte utilisation</td>
+                                <td>Infrastructure</td>
+                                <td>🐌 Lent</td>
+                                <td>JMeter, Gatling, Locust</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tests de sécurité</strong></td>
+                                <td>Détecter les vulnérabilités (XSS, injection SQL, etc.)</td>
+                                <td>Application et infrastructure</td>
+                                <td>Variable</td>
+                                <td>OWASP ZAP, Burp Suite, Snyk</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tests d'acceptation</strong></td>
+                                <td>Valider que le produit répond aux besoins métier</td>
+                                <td>Fonctionnalité complète</td>
+                                <td>🚶 Moyen</td>
+                                <td>Cucumber, FitNesse, SpecFlow</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tests de fumée (Smoke tests)</strong></td>
+                                <td>Vérifier rapidement les fonctionnalités critiques</td>
+                                <td>Fonctionnalités principales</td>
+                                <td>⚡ Rapide</td>
+                                <td>Scripts customs, CI/CD</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tests de compatibilité</strong></td>
+                                <td>Vérifier le fonctionnement sur différents navigateurs/OS</td>
+                                <td>Application UI</td>
+                                <td>🐌 Lent</td>
+                                <td>BrowserStack, Sauce Labs</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tests d'accessibilité</strong></td>
+                                <td>Garantir l'accessibilité aux personnes handicapées</td>
+                                <td>Application UI</td>
+                                <td>🚶 Moyen</td>
+                                <td>Axe, Lighthouse, Pa11y, WAVE</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tests de snapshot</strong></td>
+                                <td>Détecter les changements visuels non désirés</td>
+                                <td>Composants UI</td>
+                                <td>⚡ Rapide</td>
+                                <td>Jest (snapshots), Percy, Chromatic</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>💡 Important :</strong> Dans ce cours, nous nous concentrons uniquement sur les <strong>tests unitaires</strong> car ils constituent la base de la pyramide des tests. Une fois que vous maîtriserez les tests unitaires avec Jest, vous pourrez plus facilement apprendre les autres types de tests.
                 </div>
             </div>
 
