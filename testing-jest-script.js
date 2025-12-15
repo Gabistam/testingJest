@@ -443,4 +443,98 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialiser la première slide
     updateSlideInfo(0);
+
+    // Ajouter les boutons de copie pour tous les blocs de code
+    initCodeCopyButtons();
 });
+
+// Fonction pour initialiser les boutons de copie
+function initCodeCopyButtons() {
+    // Sélectionner tous les blocs <pre> qui contiennent du code
+    const codeBlocks = document.querySelectorAll('pre');
+
+    codeBlocks.forEach((block, index) => {
+        // Créer le bouton de copie
+        const copyButton = document.createElement('button');
+        copyButton.className = 'code-copy-btn';
+        copyButton.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            <span>Copier</span>
+        `;
+        copyButton.setAttribute('title', 'Copier le code');
+
+        // Ajouter le gestionnaire d'événements pour la copie
+        copyButton.addEventListener('click', async () => {
+            await copyCodeToClipboard(block, copyButton);
+        });
+
+        // Ajouter le bouton au bloc de code
+        block.appendChild(copyButton);
+    });
+}
+
+// Fonction pour copier le code dans le presse-papiers
+async function copyCodeToClipboard(codeBlock, button) {
+    // Récupérer le texte du code (uniquement le contenu du <code>, pas le bouton)
+    const codeElement = codeBlock.querySelector('code');
+    const codeText = codeElement ? codeElement.textContent : codeBlock.textContent;
+
+    try {
+        // Utiliser l'API Clipboard moderne
+        await navigator.clipboard.writeText(codeText);
+
+        // Feedback visuel : changer le bouton temporairement
+        const originalHTML = button.innerHTML;
+        button.classList.add('copied');
+        button.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>Copié !</span>
+        `;
+
+        // Revenir à l'état initial après 2 secondes
+        setTimeout(() => {
+            button.classList.remove('copied');
+            button.innerHTML = originalHTML;
+        }, 2000);
+
+    } catch (err) {
+        // Fallback pour les navigateurs plus anciens
+        console.error('Erreur lors de la copie:', err);
+
+        // Méthode alternative avec execCommand (deprecated mais plus compatible)
+        const textArea = document.createElement('textarea');
+        textArea.value = codeText;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-9999px';
+        document.body.appendChild(textArea);
+        textArea.select();
+
+        try {
+            document.execCommand('copy');
+
+            // Feedback visuel
+            const originalHTML = button.innerHTML;
+            button.classList.add('copied');
+            button.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Copié !</span>
+            `;
+
+            setTimeout(() => {
+                button.classList.remove('copied');
+                button.innerHTML = originalHTML;
+            }, 2000);
+        } catch (err2) {
+            console.error('Fallback copy failed:', err2);
+            alert('Impossible de copier le code. Veuillez le sélectionner manuellement.');
+        }
+
+        document.body.removeChild(textArea);
+    }
+}
